@@ -147,11 +147,73 @@ class AudioEngine {
     }
 
     playOpenHat(time = 0) {
-        // Legacy support if needed, or remove
+        const t = time || this.ctx.currentTime;
+
+        if (this.samples.openhat) {
+            this.playSample(this.samples.openhat, t);
+            return;
+        }
+
+        // Noise
+        const bufferSize = this.ctx.sampleRate;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        const highpass = this.ctx.createBiquadFilter();
+        highpass.type = 'highpass';
+        highpass.frequency.value = 8000;
+
+        const gain = this.ctx.createGain();
+
+        noise.connect(highpass);
+        highpass.connect(gain);
+        gain.connect(this.masterGain);
+
+        gain.gain.setValueAtTime(0.4, t);
+        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.3);
+
+        noise.start(t);
+        noise.stop(t + 0.3);
     }
 
     playClap(time = 0) {
-        // Legacy support if needed, or remove
+        const t = time || this.ctx.currentTime;
+
+        if (this.samples.clap) {
+            this.playSample(this.samples.clap, t);
+            return;
+        }
+
+        // Noise for clap body
+        const bufferSize = this.ctx.sampleRate;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        const highpass = this.ctx.createBiquadFilter();
+        highpass.type = 'highpass';
+        highpass.frequency.value = 2000;
+
+        const gain = this.ctx.createGain();
+
+        noise.connect(highpass);
+        highpass.connect(gain);
+        gain.connect(this.masterGain);
+
+        gain.gain.setValueAtTime(1, t);
+        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.15);
+
+        noise.start(t);
+        noise.stop(t + 0.15);
     }
 }
 

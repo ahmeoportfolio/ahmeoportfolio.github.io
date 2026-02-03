@@ -6,7 +6,6 @@ const SCHEDULE_AHEAD_TIME = 0.1; // s
 
 export function useSequencer({ bpm, grid, setHighlightStep }) {
     const [isPlaying, setIsPlaying] = useState(false);
-    const [currentStep, setCurrentStep] = useState(0);
 
     const nextNoteTimeRef = useRef(0);
     const currentStepRef = useRef(0);
