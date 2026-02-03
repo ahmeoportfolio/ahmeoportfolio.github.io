@@ -86,7 +86,7 @@ function App() {
 
       </main>
 
-      <footer style={{ textAlign: 'center', marginTop: '2rem', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
+      <footer className="site-footer">
         Developed by Ahmed | Rhythm Machine
       </footer>
     </div>
